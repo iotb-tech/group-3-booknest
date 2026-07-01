@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BookNest | Discover Your Next Read</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              parchment: "#F9F6F0",
+              ink: "#2C2C2C",
+              oxblood: "#6B2737",
+              forest: "#2D4A3E",
+              sage: "#A3B18A",
+              "warm-gray": "#A89F91",
+            },
+            fontFamily: {
+              display: ['"Playfair Display"', "serif"],
+              body: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-parchment text-ink font-body min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-forest text-parchment py-12 md:py-20"></header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto px-4 py-8"></main>
+
+    <!-- Footer -->
+    <footer class="bg-ink text-warm-gray py-8 mt-auto"></footer>
+
+    <!-- Detail View Modal -->
+    <div id="detail-modal" class="fixed inset-0 z-50 hidden"></div>
+
+    <!-- JavaScript Modules -->
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
