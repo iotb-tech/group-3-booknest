@@ -37,10 +37,35 @@
   </head>
   <body class="bg-parchment text-ink font-body min-h-screen flex flex-col">
     <!-- Header -->
-    <header class="bg-forest text-parchment py-12 md:py-20"></header>
+    <header class="bg-forest text-parchment py-12 md:py-20">
+      <nav class="container mx-auto flex items-center justify-between px-4">
+        <a href="#" class="text-3m font-display font-bold"><div class="logo">
+    <a href="index.html">
+        <img
+            src="..\group-3-booknest\booknest logo.png" alt="BookNest Logo" width="150px" height="150px"
+        >
+    </a>
+</div></a>
+        <ul class="flex space-x-6">
+          <li><a href="#" class="hover:text-sage transition">Home</a></li>
+          <li><a href="#" class="hover:text-sage transition">Genres</a></li>
+          <li><a href="#" class="hover:text-sage transition">Authors</a></li>
+          <li><a href="#" class="hover:text-sage transition">About</a></li>
+        </ul>
+      </nav>  
+    </header>
 
     <!-- Main Content Area -->
-    <main class="flex-grow container mx-auto px-4 py-8"></main>
+    <main class="flex-grow container mx-auto px-4 py-8">
+      <form action="#" method="get">
+      <input
+        type="search"
+        name="search"
+        placeholder="Search books..."
+      />
+      <button type="submit">Search</button>
+    </form>
+    </main>
 
     <!-- Footer -->
     <footer class="bg-ink text-warm-gray py-8 mt-auto"></footer>
