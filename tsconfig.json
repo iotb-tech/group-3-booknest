@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    // Where our TypeScript files live
+    "rootDir": "./js",
+
+    // Where compiled JavaScript will be output
+    "outDir": "./dist",
+
+    // Target modern browsers (they support ES modules)
+    "target": "ES2020",
+    "module": "ES2020",
+
+    // Tell TypeScript we're using ES modules (import/export)
+    "moduleResolution": "bundler",
+
+    // Strict type checking - catches more bugs
+    "strict": true,
+
+    // Allow default imports from modules without default export
+    "esModuleInterop": true,
+
+    // Skip type checking of declaration files for faster builds
+    "skipLibCheck": true,
+
+    // Generate .d.ts files for our modules
+    "declaration": true,
+
+    // Generate source maps for debugging
+    "sourceMap": true,
+
+    // Don't emit JS if there are type errors
+    "noEmitOnError": true
+  },
+  "include": ["js/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

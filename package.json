@@ -1,0 +1,25 @@
+{
+  "name": "group-3-booknest",
+  "version": "1.0.0",
+  "description": "Book discovery app using Open Library API",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "serve": "npx serve ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iotb-tech/group-3-booknest.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iotb-tech/group-3-booknest/issues"
+  },
+  "homepage": "https://github.com/iotb-tech/group-3-booknest#readme",
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}
