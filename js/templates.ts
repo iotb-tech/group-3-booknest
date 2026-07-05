@@ -92,7 +92,7 @@ export function createDetailModalHtml(book: Book, isFav: boolean): string {
   return `
     <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <!-- Modal content card -->
-      <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
+      <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
 
         <div class="flex flex-col md:flex-row">
           <!-- Left side: Book cover (full width on mobile, 1/3 on desktop) -->
@@ -105,18 +105,28 @@ export function createDetailModalHtml(book: Book, isFav: boolean): string {
             >
           </div>
 
-          <!-- Right side: Book details -->
           <div class="md:w-2/3 p-6">
-            <!-- Title row with favorite button -->
-            <div class="flex justify-between items-start mb-4">
-              <h2 class="font-display text-2xl font-bold text-oxblood">${book.title}</h2>
-              <button
-                class="text-2xl ${isFav ? "text-oxblood" : "text-warm-gray"} hover:text-oxblood transition-colors"
-                data-detail-favorite-btn
-                aria-label="${isFav ? "Remove from favorites" : "Add to favorites"}"
-              >
-                ${isFav ? "♥" : "♡"}
-              </button>
+            <!-- Title row with favorite and close buttons -->
+            <div class="flex justify-between items-start mb-4 gap-4">
+              <h2 class="font-display text-2xl font-bold text-oxblood flex-1">${book.title}</h2>
+              <div class="flex items-center gap-2 flex-shrink-0">
+                <button
+                  class="text-2xl ${isFav ? "text-oxblood" : "text-warm-gray"} hover:text-oxblood transition-colors"
+                  data-detail-favorite-btn
+                  aria-label="${isFav ? "Remove from favorites" : "Add to favorites"}"
+                  title="${isFav ? "Remove from favorites" : "Add to favorites"}"
+                >
+                  ${isFav ? "♥" : "♡"}
+                </button>
+                <button
+                  class="text-2xl text-warm-gray hover:text-ink transition-colors"
+                  data-close-modal
+                  aria-label="Close detail view"
+                  title="Close"
+                >
+                  ×
+                </button>
+              </div>
             </div>
 
             <!-- Author -->
@@ -128,14 +138,6 @@ export function createDetailModalHtml(book: Book, isFav: boolean): string {
             ${subjectsSection}
           </div>
         </div>
-
-        <!-- Close button -->
-        <button
-          class="absolute top-4 right-4 text-warm-gray hover:text-ink text-2xl"
-          data-close-modal
-          aria-label="Close detail view"
-        >×</button>
-
       </div>
     </div>
   `;
@@ -175,4 +177,50 @@ export function createFavoritesListHtml(favorites: Book[]): string {
       ${covers}
     </div>
   `;
+}
+
+// ========== FAVORITES PANEL TEMPLATE ==========
+
+// Creates the HTML for the favorites slide-in panel content.
+export function createFavoritesPanelHtml(favorites: Book[]): string {
+  if (favorites.length === 0) {
+    return `
+      <p class="text-warm-gray text-center py-8">No favorites saved yet.</p>
+      <p class="text-warm-gray text-center text-sm">Search for books and click the ♡ to save them here.</p>
+    `;
+  }
+
+  const itemsHtml = favorites
+    .map((book) => {
+      const coverUrl = getCoverUrl(book.coverId, "S");
+
+      return `
+        <div class="flex items-center gap-3 py-3 border-b border-warm-gray border-opacity-30">
+          <!-- Small book cover -->
+          <img
+            src="${coverUrl}"
+            alt="Cover of ${book.title}"
+            class="w-10 h-14 object-cover rounded flex-shrink-0"
+            onerror="this.src='assets/placeholder-cover.png'"
+          >
+          <!-- Book title and author -->
+          <div class="flex-1 min-w-0">
+            <p class="font-display font-bold text-sm text-oxblood truncate">${book.title}</p>
+            <p class="text-xs text-warm-gray truncate">${book.author}</p>
+          </div>
+          <!-- Unfavorite button -->
+          <button
+            class="text-oxblood hover:text-ink text-lg flex-shrink-0 transition-colors"
+            data-panel-unfavorite="${book.id}"
+            aria-label="Remove ${book.title} from favorites"
+            title="Remove from favorites"
+          >
+            ♥
+          </button>
+        </div>
+      `;
+    })
+    .join("");
+
+  return itemsHtml;
 }

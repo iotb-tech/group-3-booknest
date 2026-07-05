@@ -44,4 +44,5 @@ export interface AppState {
   errorMessage: string | null;
   favorites: Book[];
   selectedBook: Book | null;
+  isFavoritesPanelOpen: boolean;
 }

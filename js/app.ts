@@ -12,7 +12,9 @@ import {
   createBookCardHtml,
   createDetailModalHtml,
   createFavoritesListHtml,
+  createFavoritesPanelHtml,
 } from "./templates.js";
+import { isBook, getCoverUrl } from "./utils.js";
 
 class BookNestApp {
   // ========== STATE ==========
@@ -23,6 +25,7 @@ class BookNestApp {
     errorMessage: null,
     favorites: [],
     selectedBook: null,
+    isFavoritesPanelOpen: false,
   };
 
   // ========== DOM REFERENCES ==========
@@ -34,6 +37,12 @@ class BookNestApp {
   private errorState: HTMLElement | null = null;
   private detailModal: HTMLElement | null = null;
   private favoritesContainer: HTMLElement | null = null;
+  private favoritesToggle: HTMLButtonElement | null = null;
+  private favoritesPanel: HTMLElement | null = null;
+  private favoritesPanelContent: HTMLElement | null = null;
+  private favoritesBackdrop: HTMLElement | null = null;
+  private favoritesPanelClose: HTMLButtonElement | null = null;
+  private favoritesCount: HTMLElement | null = null;
 
   // ========== INITIALIZATION ==========
   constructor() {
@@ -47,6 +56,7 @@ class BookNestApp {
   private init(): void {
     this.cacheDomElements();
     this.state.favorites = loadFavorites();
+    this.updateFavoritesCount();
     this.bindEvents();
     this.render();
   }
@@ -64,6 +74,18 @@ class BookNestApp {
     this.errorState = document.getElementById("error-state");
     this.detailModal = document.getElementById("detail-modal");
     this.favoritesContainer = document.getElementById("favorites-container");
+    this.favoritesToggle = document.getElementById(
+      "favorites-toggle",
+    ) as HTMLButtonElement | null;
+    this.favoritesPanel = document.getElementById("favorites-panel");
+    this.favoritesPanelContent = document.getElementById(
+      "favorites-panel-content",
+    );
+    this.favoritesBackdrop = document.getElementById("favorites-backdrop");
+    this.favoritesPanelClose = document.getElementById(
+      "favorites-panel-close",
+    ) as HTMLButtonElement | null;
+    this.favoritesCount = document.getElementById("favorites-count");
   }
 
   private bindEvents(): void {
@@ -76,6 +98,18 @@ class BookNestApp {
       if (e.key === "Escape" && this.state.selectedBook) {
         this.closeDetailView();
       }
+    });
+
+    this.favoritesToggle?.addEventListener("click", () => {
+      this.toggleFavoritesPanel();
+    });
+
+    this.favoritesPanelClose?.addEventListener("click", () => {
+      this.closeFavoritesPanel();
+    });
+
+    this.favoritesBackdrop?.addEventListener("click", () => {
+      this.closeFavoritesPanel();
     });
   }
 
@@ -117,11 +151,74 @@ class BookNestApp {
   handleToggleFavorite(book: Book): void {
     this.state.favorites = toggleFavorite(this.state.favorites, book);
     saveFavorites(this.state.favorites);
+    this.updateFavoritesCount();
     this.render();
   }
 
   isBookFavorite(bookId: string): boolean {
     return isFavorite(this.state.favorites, bookId);
+  }
+
+  // ========== FAVORITES PANEL ==========
+
+  private toggleFavoritesPanel(): void {
+    if (this.state.isFavoritesPanelOpen) {
+      this.closeFavoritesPanel();
+    } else {
+      this.openFavoritesPanel();
+    }
+  }
+
+  private openFavoritesPanel(): void {
+    this.state.isFavoritesPanelOpen = true;
+
+    this.favoritesBackdrop?.classList.remove("hidden");
+
+    this.favoritesPanel?.classList.remove("translate-x-full");
+
+    this.renderFavoritesPanelContent();
+  }
+
+  private closeFavoritesPanel(): void {
+    this.state.isFavoritesPanelOpen = false;
+
+    this.favoritesBackdrop?.classList.add("hidden");
+
+    this.favoritesPanel?.classList.add("translate-x-full");
+  }
+
+  private renderFavoritesPanelContent(): void {
+    if (!this.favoritesPanelContent) return;
+
+    this.favoritesPanelContent.innerHTML = createFavoritesPanelHtml(
+      this.state.favorites,
+    );
+
+    this.favoritesPanelContent
+      .querySelectorAll("[data-panel-unfavorite]")
+      .forEach((btn) => {
+        const bookId = (btn as HTMLElement).dataset.panelUnfavorite;
+        if (!bookId) return;
+
+        btn.addEventListener("click", () => {
+          const book = this.state.favorites.find((b) => b.id === bookId);
+          if (book) {
+            this.handleToggleFavorite(book);
+
+            this.renderFavoritesPanelContent();
+
+            if (this.state.favorites.length === 0) {
+              this.closeFavoritesPanel();
+            }
+          }
+        });
+      });
+  }
+
+  private updateFavoritesCount(): void {
+    if (this.favoritesCount) {
+      this.favoritesCount.textContent = String(this.state.favorites.length);
+    }
   }
 
   // ========== RENDERING ==========
